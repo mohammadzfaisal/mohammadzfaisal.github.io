@@ -1,0 +1,136 @@
+baseURL: "https://example.com"
+theme: "terminalcv"
+title: "myterminal"
+
+params:
+  version: "2.1.0"
+  description: "My terminal"
+  greetingColor: "#FFFFFF"
+  blog: true
+  
+  # --- PROMPT STYLING ---
+  prompt:
+    core:
+      text: "user@myterminal"
+      color: "pink"
+      before: "["
+      beforeColor: "red"
+      after: '\]'
+      afterColor: "red"
+    separator:
+      text: "-"
+    path:
+      before: "["
+      beforeColor: "red"
+      text: "~/myterminal"
+      color: "blue"
+      after: '\]'
+      afterColor: "red"
+    extra:
+      text: ": "
+      color: "orange"
+
+  # --- SYSTEM SETTINGS ---
+  startxLocation: https://ysap.sh/
+  listLS: true
+  exitMessage: "[Session completed, the browserwindow can be safely closed]"
+  source: true
+
+  # --- ASCII ART GREETING ---
+  greeting: |
+    ‎ 
+     _ __ ___  _   _| |_ ___ _ __ _ __ ___ (_)_ __   __ _ _
+    | '_ ` _ \| | | | __/ _ \ '__| '_ ` _ \| | '_ \ / _` (_)
+    | | | | | | |_| | ||  __/ |  | | | | | | | | | | (_| |_
+    |_| |_| |_|\__, |\__\___|_|  |_| |_| |_|_|_| |_|\__,_(_)
+               |___/
+    
+    
+    Type 'help' to get started.
+
+    Welcome to my interactive portfolio.
+
+  # --- BOOT SEQUENCE ANIMATION ---
+  bootsequence: |
+    [[;grey;][  0.000000]] Initializing Cloud Resources...
+    [[;grey;][  0.240152]] node-01: Provisioning VPC Network (10.0.0.0/16)
+    [[;grey;][  0.582103]] node-01: Instance IP: [[b;white;]__IP__]
+    [[;grey;][  0.892110]] node-01: Attaching IAM Role: TerminalAdmin
+    [[b;green;]OK] Cloud Infrastructure Ready
+
+    [[;grey;][  0.952110]] Checking Egress Rules...
+    [[;#ff6600;][  WARN  ]] [[;yellow;]Internet Breakout Detected (UDP/443).]
+    [[;#00d9ff;][  INFO  ]] [[;white;]ICMP (Pong) is preferred for connectivity checks.]
+
+    [[;grey;][  1.210442]] Initializing CloudOS Kernel 1.4.2 (root@faisal-cloud)
+    [[;grey;][  1.450122]] [k8s] Scheduling core-services pods...
+    [[;grey;][  1.820331]] [k8s] Pod: api-gateway-v1 ....... [[b;green;]READY]
+    [[b;white;]------------------------------------------------------------]
+    [[b;white;]CloudOS v1.4.2 (Node: __IP__)]
+    [[;grey;]Copyright 2025 Mohammad Faisal. MIT License.]
+    [[b;white;]------------------------------------------------------------]
+    [[b;green;]DONE:] System is live. Terminal interface active.
+
+  # --- WHOIS (Personal Info) ---
+  whois:
+    details:
+      name: "Mohammad Faisal"
+      profession: "Cloud Engineer"
+      location: "Calgary, Canada"
+      email: "foo@someemail.com"
+      homelink: "https://myHomePage.com"
+      description: |
+        Cloud Engineer specialized in AWS, Kubernetes, and Terraform.
+
+  # --- SOCIAL LINKS ---
+  social:
+    details:
+      - name: "github"
+        url: "https://github.com/mohammadzfaisal"
+      - name: "linkedin"
+        url: "https://linkedin.com/in/mohammadzfaisal"
+
+  # --- DATA SOURCES (MOVED) ---
+  # Work      -> Moved to data/work.yaml
+  # Education -> Moved to data/education.yaml
+  # Projects  -> Moved to content/projects/*.md
+
+  # --- SKILLS ---
+  skills:
+    details:
+      - name: Cloud Architecture
+        percentage: 90
+      - name: Python / Go
+        percentage: 85
+      - name: Kubernetes
+        percentage: 80
+
+  # --- CLOUD MODULES ---
+  k8s:
+    commandName: k8s
+    title: "\n☸ Kubernetes Dashboard\n"
+    titleColor: "cyan"
+    contentColor: "white"
+    content: "[[b;#326ce5;]CLUSTER INFO:]\n  [[;#00d9ff;]●] Context: gke_faisal-cloud_us-central1_prodk8s\n  [[;#00d9ff;]●] Region: us-central1\n\n[[b;#00ff88;]HEALTH STATUS:]\n  [[;#00ff88;]✓] All systems operational\n  [[;#00ff88;]✓] Control Plane: Healthy\n  [[;#00ff88;]✓] Nodes: 3/3 Ready\n\n[[b;yellow;]RESOURCES:]\n  [[;yellow;]⚡] CPU: 67% allocated\n  [[;yellow;]💾] Memory: 4.2GB / 12GB"
+
+  terraform:
+    commandName: terraform plan
+    title: "\nview infrastructure plan\n"
+    titleColor: "#7B42BC"
+    content: "[[b;#9370db;]TERRAFORM STATUS:]\n  [[;#00d9ff;]●] Workspace: production\n  [[;#00d9ff;]●] Provider: AWS (us-east-1)\n\n[[b;#00ff88;]PLANNED CHANGES:]\n  [[;#00ff88;]+ 12] Resources to add\n  [[;yellow;]~ 3] Resources to change\n  [[;red;]- 0] Resources to destroy\n\n[[b;white;]MODULES:]\n  [[;grey;]→] vpc, compute, database, monitoring"
+      
+  certifications:
+    details:
+      - certName: AWS Certified Solutions Architect
+        date: 2024
+        badge: https://aws.amazon.com/verification
+      - certName: CKA - Certified Kubernetes Administrator
+        date: 2023
+
+  misc:
+    commandName: misc
+    title: "Miscellaneous Info"
+    titleColor: cyan
+    content: |
+      [INFO] No other running processes.
+    contentColor: green
