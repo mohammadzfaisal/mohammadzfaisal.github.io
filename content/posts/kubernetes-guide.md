@@ -1,6 +1,6 @@
 ---
 title: "Mastering Kubernetes Services"
-date: 2024-03-20
+date: 2025-12-24
 slug: "k8s-services"  # Optional: Custom slug for easier typing (e.g. 'cat k8s-services')
 ---
 
