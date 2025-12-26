@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Mohammad Faisal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --drac-bg: #282a36;
+            --drac-fg: #f8f8f2;
+            --drac-cyan: #8be9fd;
+            --drac-green: #50fa7b;
+            --drac-purple: #bd93f9;
+            --drac-comment: #6272a4;
+            --drac-red: #ff5555;
+        }
+
+        body {
+            background-color: var(--drac-bg);
+            color: var(--drac-fg);
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        .header { border-bottom: 2px solid var(--drac-comment); padding-bottom: 20px; margin-bottom: 40px; }
+        .back-btn { color: var(--drac-cyan); text-decoration: none; font-size: 0.9em; }
+
+        /* GRID SYSTEM */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* CARD DESIGN */
+        .project-card {
+            background: #343746; /* Slightly lighter than background */
+            border: 1px solid var(--drac-comment);
+            border-radius: 8px;
+            padding: 20px;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--drac-purple);
+        }
+
+        .project-card h2 { margin: 0 0 10px 0; font-size: 1.2em; color: var(--drac-cyan); }
+        .project-card p { font-size: 0.9em; color: #bdc3c7; flex-grow: 1; }
+
+        /* BADGES */
+        .badge-container { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px; }
+        .badge {
+            font-size: 0.7em;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-aws { background: #ff9900; color: #000; }
+        .badge-terraform { background: #7b42bc; color: #fff; }
+        .badge-live { background: var(--drac-green); color: #000; }
+
+        .view-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 0;
+            color: var(--drac-purple);
+            text-decoration: none;
+            font-weight: bold;
+            border-top: 1px solid var(--drac-comment);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-btn">$ cd ..</a>
+            <h1 style="color: var(--drac-green);">/projects</h1>
+        </div>
+
+        <div class="project-grid">
+
+            <div class="project-card">
+                <div class="badge-container">
+                    <span class="badge badge-aws">AWS</span>
+                    <span class="badge badge-live">Live</span>
+                </div>
+                <h2>Multi-Region VPC Peering</h2>
+                <p>Automated global infrastructure rollout using Terraform and GitHub Actions.</p>
+                <a href="/view.html?post=aws&type=projects" class="view-link">View Details_</a>
+            </div>
+
+            <div class="project-card">
+                <div class="badge-container">
+                    <span class="badge badge-terraform">Terraform</span>
+                    <span class="badge" style="background: var(--drac-cyan); color: #000;">K8s</span>
+                </div>
+                <h2>EKS Cluster Automation</h2>
+                <p>Provisioning production-ready EKS clusters with monitoring and logging enabled.</p>
+                <a href="/view.html?post=eks-automation&type=projects" class="view-link">View Details_</a>
+            </div>
+
+            </div>
+    </div>
+
+</body>
+</html>

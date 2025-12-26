@@ -1,34 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Blogs - Mohammad Faisal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Mohammad Faisal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: monospace; max-width: 800px; margin: 40px auto; padding: 20px; background: #f4f4f4; }
-        .post { background: white; padding: 20px; margin-bottom: 20px; border-left: 5px solid #000; }
-        h1 { border-bottom: 2px solid #000; padding-bottom: 10px; }
-        a { text-decoration: none; color: #333; }
-        a:hover { color: blue; }
-        .back-btn { background: #000; color: white; padding: 10px 20px; display: inline-block; margin-bottom: 20px; }
+        :root {
+            --drac-bg: #282a36;
+            --drac-fg: #f8f8f2;
+            --drac-cyan: #8be9fd;
+            --drac-green: #50fa7b;
+            --drac-purple: #bd93f9;
+            --drac-comment: #6272a4;
+            --drac-orange: #ffb86c;
+        }
+
+        body {
+            background-color: var(--drac-bg);
+            color: var(--drac-fg);
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 850px; margin: 0 auto; }
+
+        .header { border-bottom: 2px solid var(--drac-comment); padding-bottom: 20px; margin-bottom: 40px; }
+        .back-btn { color: var(--drac-cyan); text-decoration: none; font-size: 0.9em; }
+
+        /* BLOG LIST LAYOUT */
+        .blog-list { display: flex; flex-direction: column; gap: 20px; }
+
+        /* BLOG CARD DESIGN */
+        .blog-card {
+            background: #343746;
+            border: 1px solid var(--drac-comment);
+            border-radius: 8px;
+            padding: 25px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            display: block;
+        }
+
+        .blog-card:hover {
+            border-color: var(--drac-orange);
+            transform: translateX(10px); /* Slides right on hover */
+            background: #3d4154;
+        }
+
+        .date-label {
+            color: var(--drac-orange);
+            font-size: 0.85em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .blog-card h2 { margin: 0 0 10px 0; font-size: 1.4em; color: var(--drac-fg); }
+        .blog-card p { margin: 0; font-size: 0.95em; color: #bdc3c7; line-height: 1.6; }
+
+        .reading-time {
+            margin-top: 15px;
+            font-size: 0.8em;
+            color: var(--drac-comment);
+            font-style: italic;
+        }
+
+        /* Footer Info */
+        .footer-note {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--drac-comment);
+        }
     </style>
 </head>
 <body>
 
-    <a href="/" class="back-btn"> < Back to Terminal</a>
+    <div class="container">
+        <div class="header">
+            <a href="/" class="back-btn">$ cd ..</a>
+            <h1 style="color: var(--drac-orange);">/blogs</h1>
+        </div>
 
-    <h1>/myblogs</h1>
+        <div class="blog-list">
 
-    <div class="post">
-        <h2><a href="/content/posts/terraform.txt">Getting Started with Terraform</a></h2>
-        <p>Date: 2025-01-01</p>
-        <p>A guide on how I manage infrastructure...</p>
-        <a href="/content/posts/terraform.txt">[Read Raw File]</a>
-    </div>
+            <a href="/view.html?post=aws&type=posts" class="blog-card">
+                <span class="date-label">2025.01.15 // CLOUD</span>
+                <h2>Understanding AWS Networking</h2>
+                <p>A deep dive into VPCs, Subnets, and how data actually flows through the Amazon backbone.</p>
+                <div class="reading-time">5 min read_</div>
+            </a>
 
-    <div class="post">
-        <h2><a href="/content/posts/aws.txt">AWS Networking 101</a></h2>
-        <p>Date: 2025-01-15</p>
-        <p>Understanding VPCs and Subnets...</p>
-        <a href="/content/posts/aws.txt">[Read Raw File]</a>
+            <a href="/view.html?post=terraform&type=posts" class="blog-card">
+                <span class="date-label">2025.01.01 // IAC</span>
+                <h2>Terraform: The Good Parts</h2>
+                <p>Why modularity is your best friend when scaling infrastructure from 1 to 100 servers.</p>
+                <div class="reading-time">8 min read_</div>
+            </a>
+
+            <a href="/view.html?post=hello&type=posts" class="blog-card">
+                <span class="date-label">2024.12.20 // SYSTEM</span>
+                <h2>Hello World</h2>
+                <p>Initial post testing the new terminal-fetch deployment system.</p>
+                <div class="reading-time">1 min read_</div>
+            </a>
+
+        </div>
+
+        <div class="footer-note">
+            [ End of Log ]
+        </div>
     </div>
 
 </body>

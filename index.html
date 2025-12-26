@@ -49,8 +49,8 @@
 
 <script>
 // --- EMAIL CONFIGURATION (Obfuscated) ---
-var emailUser = "mohammadzfaisal";     // Your username
-var emailDomain = "gmail.com";         // Your provider
+var emailUser = "myterminal";     // Your username
+var emailDomain = "faisal.quest";         // Your provider
 var myEmail = emailUser + "@" + emailDomain; 
 // Now 'myEmail' holds the full address, but bots reading the raw file won't see it easily.
 
@@ -75,6 +75,7 @@ jQuery(document).ready(function($) {
     '  [[b;yellow;]education]       Academic background\n' +
     '  [[b;yellow;]posts]           Read engineering blog\n' +
     '  [[b;yellow;]social]          Connect on social media\n' +
+    '  [[b;yellow;]contact]         Send me a message\n' +
     '\n[[b;white;]Actions:]\n' +
     '  [[b;grey;]cat <file>]      Read a file (e.g. cat whois.txt)\n' +
     '  [[b;grey;]startx]          Switch to graphical GUI mode\n' +
@@ -286,6 +287,37 @@ jQuery(document).ready(function($) {
                 term.echo(help);
                 break;
 
+            case 'contact':  // new contact command
+                term.echo("[[b;#8be9fd;]Initiating secure communication channel...]");
+                
+                term.push(function(name) {
+                    term.push(function(email) {
+                        term.push(function(message) {
+                            term.pause();
+                            term.echo("[[;grey;]Sending transmission...]");
+                            
+                            // Formspree AJAX Call
+                            $.ajax({
+                                url: "https://formspree.io/f/xojqanyl", // YOUR ID HERE
+                                method: "POST",
+                                data: { name: name, email: email, message: message },
+                                dataType: "json",
+                                success: function() {
+                                    term.echo("[[b;green;]Success!] I'll be in touch.");
+                                    term.resume();
+                                    term.pop(); term.pop(); term.pop(); 
+                                },
+                                error: function() {
+                                    term.echo("[[b;red;]Failed.] Email me at: " + myEmail);
+                                    term.resume();
+                                    term.pop(); term.pop(); term.pop();
+                                }
+                            });
+                        }, { prompt: "Message: " });
+                    }, { prompt: "Your Email: " });
+                }, { prompt: "Your Name: " });
+                break;
+
             case 'ls':
                 var arg = cmdArr[1];
                 var isDetailed = (arg === '-al' || arg === '-la' || arg === '-l' || arg === '-a');
@@ -337,7 +369,7 @@ jQuery(document).ready(function($) {
                     term.echo("[[;orange;]whois.txt]  [[;orange;]experience.log]  [[;orange;]projects.md]  [[b;green;]resume.pdf]");
                 }
                 break;
-                
+
             case 'whois':
                 echoArray(whois);
                 break;
@@ -585,8 +617,8 @@ jQuery(document).ready(function($) {
                 "[[b;green;]OK] Cloud Infrastructure Ready",
                 "",
                 "[[;grey;][  0.952110]] Checking Egress Rules...",
-                "[[;#ff6600;]&#91;][[b;#ff6600;]  WARN  ][[;#ff6600;]&#93;] [[;yellow;]Internet Breakout Detected (UDP/443).]",
-                "[[;#00d9ff;]&#91;][[b;#00d9ff;]  INFO  ][[;#00d9ff;]&#93;] [[;white;]ICMP (Pong) is preferred for connectivity checks.]",
+                "[[;grey;]&#91;][[b;#ff6600;]  WARN  ][[;grey;]&#93;] [[;yellow;]Internet Breakout Detected (UDP/443).]",
+                "[[;grey;]&#91;][[b;#00d9ff;]  INFO  ][[;grey;]&#93;] [[;white;]ICMP (Pong) is preferred for connectivity checks.]",
                 "",
                 "[[;grey;][  1.210442]] Initializing CloudOS Kernel 1.4.2 (root@faisal-cloud)",
                 "[[;grey;][  1.450122]] [k8s] Scheduling core-services pods...",
