@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects - Mohammad Faisal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -16,6 +15,7 @@
             --drac-purple: #bd93f9;
             --drac-comment: #6272a4;
             --drac-red: #ff5555;
+            --drac-orange: #ffb86c;
         }
 
         body {
@@ -27,20 +27,31 @@
         }
 
         .container { max-width: 1000px; margin: 0 auto; }
-
         .header { border-bottom: 2px solid var(--drac-comment); padding-bottom: 20px; margin-bottom: 40px; }
         .back-btn { color: var(--drac-cyan); text-decoration: none; font-size: 0.9em; }
 
-        /* GRID SYSTEM */
+        /* SEARCH BAR - Feature added from blog engine */
+        .search-container { margin-bottom: 30px; }
+        #project-search {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--drac-comment);
+            background: #343746;
+            color: var(--drac-fg);
+            font-family: 'Fira Code', monospace;
+            outline: none;
+        }
+        #project-search:focus { border-color: var(--drac-purple); }
+
         .project-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
         }
 
-        /* CARD DESIGN */
         .project-card {
-            background: #343746; /* Slightly lighter than background */
+            background: #343746;
             border: 1px solid var(--drac-comment);
             border-radius: 8px;
             padding: 20px;
@@ -55,9 +66,8 @@
         }
 
         .project-card h2 { margin: 0 0 10px 0; font-size: 1.2em; color: var(--drac-cyan); }
-        .project-card p { font-size: 0.9em; color: #bdc3c7; flex-grow: 1; }
+        .project-card p { font-size: 0.9em; color: #bdc3c7; flex-grow: 1; line-height: 1.5; }
 
-        /* BADGES */
         .badge-container { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px; }
         .badge {
             font-size: 0.7em;
@@ -65,10 +75,8 @@
             border-radius: 4px;
             font-weight: bold;
             text-transform: uppercase;
+            color: #000; /* Dark text for contrast */
         }
-        .badge-aws { background: #ff9900; color: #000; }
-        .badge-terraform { background: #7b42bc; color: #fff; }
-        .badge-live { background: var(--drac-green); color: #000; }
 
         .view-link {
             display: inline-block;
@@ -89,40 +97,52 @@
             <h1 style="color: var(--drac-green);">/projects</h1>
         </div>
 
-        <div class="project-grid">
+        <div class="search-container">
+            <input type="text" id="project-search" placeholder="Filter projects by name or tech stack...">
+        </div>
 
-            <div class="project-card">
-                <div class="badge-container">
-                    <span class="badge badge-aws">AWS</span>
-                    <span class="badge badge-live">Live</span>
-                </div>
-                <h2>Multi-Region VPC Peering</h2>
-                <p>Automated global infrastructure rollout using Terraform and GitHub Actions.</p>
-                <a href="/view.html?post=aws&type=projects" class="view-link">View Details_</a>
-            </div>
-
-            <div class="project-card">
-                <div class="badge-container">
-                    <span class="badge badge-terraform">Terraform</span>
-                    <span class="badge" style="background: var(--drac-cyan); color: #000;">K8s</span>
-                </div>
-                <h2>EKS Cluster Automation</h2>
-                <p>Provisioning production-ready EKS clusters with monitoring and logging enabled.</p>
-                <a href="/view.html?post=eks-automation&type=projects" class="view-link">View Details_</a>
-            </div>
-
-            <div class="project-card">
-                <div class="badge-container">
-                    <span class="badge" style="background: #2ecc71; color: #000;">Monitoring</span>
-                    <span class="badge" style="background: #bd93f9; color: #fff;">Grafana</span>
-                </div>
-                <h2>Cloud Dashboard</h2>
-                <p>A real-time monitoring solution for multi-cloud environments.</p>
-                <a href="/view.html?post=cloud-dashboard&type=projects" class="view-link">View Details_</a>
-            </div>
-
+        <div id="project-grid" class="project-grid">
             </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let allProjects = [];
+
+            fetch('/data.json')
+                .then(res => res.json())
+                .then(data => {
+                    allProjects = data.projects;
+                    renderProjects(allProjects);
+                });
+
+            // LIVE SEARCH FEATURE
+            document.getElementById('project-search').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = allProjects.filter(p => 
+                    p.title.toLowerCase().includes(term) || 
+                    p.description.toLowerCase().includes(term) ||
+                    p.badges.some(b => b.name.toLowerCase().includes(term))
+                );
+                renderProjects(filtered);
+            });
+
+            function renderProjects(projects) {
+                const grid = document.getElementById('project-grid');
+                grid.innerHTML = projects.map(p => `
+                    <div class="project-card">
+                        <div class="badge-container">
+                            ${p.badges.map(b => `
+                                <span class="badge" style="background: ${b.color}">${b.name}</span>
+                            `).join('')}
+                        </div>
+                        <h2>${p.title}</h2>
+                        <p>${p.description}</p>
+                        <a href="/view.html?post=${p.id}&type=projects" class="view-link">View Details_</a>
+                    </div>
+                `).join('');
+            }
+        });
+    </script>
 </body>
 </html>

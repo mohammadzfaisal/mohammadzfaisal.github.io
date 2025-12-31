@@ -23,23 +23,21 @@
         body {
             background-color: var(--drac-bg);
             color: var(--drac-fg);
-            font-family: 'Fira Code', monospace; /* Fira Font applied */
+            font-family: 'Fira Code', monospace;
             margin: 0;
             padding: 20px;
             line-height: 1.5;
         }
 
-        /* The main container - looks like a terminal window */
         #terminal-container {
             max-width: 900px;
             margin: 20px auto;
             padding: 20px;
-            border: 1px solid var(--drac-comment); /* Subtle border */
+            border: 1px solid var(--drac-comment);
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            white-space: pre-wrap; /* Preserve text formatting */
+            white-space: pre-wrap;
         }
 
-        /* Navigation Link styling */
         .back-link {
             color: var(--drac-comment);
             text-decoration: none;
@@ -49,32 +47,27 @@
         .back-link:hover { color: var(--drac-cyan); }
         .prompt-char { color: var(--drac-green); margin-right: 10px; }
 
-        /* IMAGE STYLING FOR DARK MODE */
         img {
             max-width: 100%;
             border: 2px solid var(--drac-comment);
             border-radius: 4px;
             margin: 20px 0;
-            /* Optional: Slight dimming so images don't blind you in dark mode */
             filter: brightness(0.9); 
         }
 
-        /* --- THE AUTOMATIC HEADER STYLE --- */
         .terminal-header {
-            color: var(--drac-cyan); /* Dracula Cyan */
-            font-weight: 700;        /* Bold */
+            color: var(--drac-cyan);
+            font-weight: 700;
             font-size: 1.6em;
             display: block;
             margin-bottom: 1.5em;
-            border-bottom: 2px dashed var(--drac-comment); /* Terminal separator */
+            border-bottom: 2px dashed var(--drac-comment);
             padding-bottom: 15px;
         }
         .header-prompt { color: var(--drac-purple); margin-right: 10px;}
 
-        /* --- TRANSLATED TERMINAL COLORS (Dracula Palette) --- */
-        /* These map the codes in your .txt file to CSS classes */
         .term-orange { color: var(--drac-orange); font-weight: bold; }
-        .term-blue { color: var(--drac-cyan); font-weight: bold; } /* Mapping 'blue' to cyan for better visibility */
+        .term-blue { color: var(--drac-cyan); font-weight: bold; }
         .term-cyan { color: var(--drac-cyan); font-weight: bold; }
         .term-green { color: var(--drac-green); font-weight: bold; }
         .term-grey { color: var(--drac-comment); }
@@ -90,10 +83,15 @@
         </div>
     </div>
 
+    <div id="series-nav" style="display:none; margin-top:30px; padding:20px 0; border-top:1px dashed #6272a4; justify-content: space-between; font-family: 'Fira Code', monospace;">
+        <a id="prev-day" href="#">&lt;&lt; Previous</a>
+        <a href="/myblogs/terraform-30.html" style="color:#8be9fd;">[ 30 Day Index ]</a>
+        <a id="next-day" href="#">Next &gt;&gt;</a>
+    </div>
+
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const postSlug = urlParams.get('post');
-        // Determine if it's a blog post or project based on URL param, default to posts if unsure
         const type = urlParams.get('type') || 'posts'; 
         const filePath = `/content/${type}/${postSlug}.txt`;
 
@@ -104,17 +102,50 @@
                     return response.text();
                 })
                 .then(text => {
-                    // Run the translation engine
                     const html = parseTerminalToHTML(text);
                     document.getElementById('content').innerHTML = html;
-                    document.title = "./" + postSlug + " [" + type + "]";
+                    const displayTitle = postSlug.split('/').pop();
+                    document.title = "./" + displayTitle + " [" + type + "]";
+
+                    if (postSlug.includes('tf-day')) {
+                        setupSeriesNav(postSlug);
+                    }
                 })
                 .catch(err => {
                     document.getElementById('content').innerHTML = `<span class="term-red">Error 404: File '${filePath}' not found.</span>`;
                 });
         }
 
-        // --- THE ENHANCED TRANSLATOR ENGINE ---
+        function setupSeriesNav(currentSlug) {
+            const dayMatch = currentSlug.match(/tf-day(\d+)/);
+            if (!dayMatch) return;
+            
+            const dayNum = parseInt(dayMatch[1]);
+            const navBar = document.getElementById('series-nav');
+            const folderPrefix = currentSlug.includes('/') ? currentSlug.split('/')[0] + '/' : '';
+            
+            if (navBar) {
+                navBar.style.display = 'flex';
+                
+                const prevBtn = document.getElementById('prev-day');
+                const nextBtn = document.getElementById('next-day');
+                
+                if (dayNum > 0) {
+                    prevBtn.href = `view.html?post=${folderPrefix}tf-day${dayNum - 1}&type=posts`;
+                    prevBtn.style.visibility = 'visible';
+                } else {
+                    prevBtn.style.visibility = 'hidden';
+                }
+                
+                if (dayNum < 30) {
+                    nextBtn.href = `view.html?post=${folderPrefix}tf-day${dayNum + 1}&type=posts`;
+                    nextBtn.style.visibility = 'visible';
+                } else {
+                    nextBtn.style.visibility = 'hidden';
+                }
+            }
+        }
+
         function parseTerminalToHTML(text) {
             // Split text into lines to handle the header separately
             let lines = text.split('\n');
@@ -144,7 +175,7 @@
             // Cleanup: Remove white/default tags, leave plain text
             bodyText = bodyText.replace(/\[\[b;white;\](.*?)\]/g, '$1');
             // Final catch-all to strip broken tags so they don't show raw
-             bodyText = bodyText.replace(/\[\[.*?\](.*?)\]/g, '$1');
+            bodyText = bodyText.replace(/\[\[.*?\](.*?)\]/g, '$1');
 
             // Combine header and body
             return styledHeader + "\n" + bodyText;

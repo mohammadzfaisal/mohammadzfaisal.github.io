@@ -48,7 +48,7 @@
 
         .blog-card:hover {
             border-color: var(--drac-orange);
-            transform: translateX(10px); /* Slides right on hover */
+            transform: translateX(10px);
             background: #3d4154;
         }
 
@@ -69,7 +69,17 @@
             font-style: italic;
         }
 
-        /* Footer Info */
+        .series-badge {
+            background: var(--drac-green);
+            color: var(--drac-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
         .footer-note {
             margin-top: 50px;
             text-align: center;
@@ -86,29 +96,8 @@
             <h1 style="color: var(--drac-orange);">/blogs</h1>
         </div>
 
-        <div class="blog-list">
-
-            <a href="/view.html?post=aws&type=posts" class="blog-card">
-                <span class="date-label">2025.01.15 // CLOUD</span>
-                <h2>Understanding AWS Networking</h2>
-                <p>A deep dive into VPCs, Subnets, and how data actually flows through the Amazon backbone.</p>
-                <div class="reading-time">5 min read_</div>
-            </a>
-
-            <a href="/view.html?post=terraform&type=posts" class="blog-card">
-                <span class="date-label">2025.01.01 // IAC</span>
-                <h2>Terraform: The Good Parts</h2>
-                <p>Why modularity is your best friend when scaling infrastructure from 1 to 100 servers.</p>
-                <div class="reading-time">8 min read_</div>
-            </a>
-
-            <a href="/view.html?post=hello&type=posts" class="blog-card">
-                <span class="date-label">2024.12.20 // SYSTEM</span>
-                <h2>Hello World</h2>
-                <p>Initial post testing the new terminal-fetch deployment system.</p>
-                <div class="reading-time">1 min read_</div>
-            </a>
-
+        <div id="blog-list" class="blog-list">
+            <p style="color: var(--drac-cyan)">Fetching logs...</p>
         </div>
 
         <div class="footer-note">
@@ -116,5 +105,57 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fetch the central data file
+            fetch('/data.json')
+                .then(response => {
+                    if (!response.ok) throw new Error("Could not find data.json");
+                    return response.json();
+                })
+                .then(data => {
+                    renderBlogs(data.blogs, data.terraform_challenge);
+                })
+                .catch(err => {
+                    document.getElementById('blog-list').innerHTML = 
+                        `<p style="color: #ff5555">Error: Check console for path details.</p>`;
+                    console.error(err);
+                });
+
+            function renderBlogs(blogs, challenge) {
+                const listContainer = document.getElementById('blog-list');
+                listContainer.innerHTML = ''; // Clear loading text
+
+                // 1. First, calculate Terraform progress for the special card
+                const completed = challenge.filter(d => d.status === 'completed').length;
+                const total = challenge.length;
+                const progressText = `${completed}/${total} Days Complete`;
+
+                // 2. Add the special Terraform Series Card
+                const tfCard = `
+                    <a href="/myblogs/terraform-30.html" class="blog-card" style="border-left: 5px solid var(--drac-green);">
+                        <span class="date-label">SERIES // ACTIVE CHALLENGE <span class="series-badge">${progressText}</span></span>
+                        <h2>30 Days of Terraform</h2>
+                        <p>A daily deep-dive into Infrastructure as Code. Follow my progress through 30 structured labs and state management exercises.</p>
+                        <div class="reading-time">Click to view progress grid_</div>
+                    </a>
+                `;
+                listContainer.innerHTML += tfCard;
+
+                // 3. Add regular blog posts from JSON
+                blogs.forEach(post => {
+                    const postHTML = `
+                        <a href="/view.html?post=${post.id}&type=posts" class="blog-card">
+                            <span class="date-label">${post.date} // ${post.category.toUpperCase()}</span>
+                            <h2>${post.title}</h2>
+                            <p>${post.description || ''}</p>
+                            <div class="reading-time">${post.readingTime || '5 min'} read_</div>
+                        </a>
+                    `;
+                    listContainer.innerHTML += postHTML;
+                });
+            }
+        });
+    </script>
 </body>
 </html>

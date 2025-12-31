@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 Days of Terraform - Mohammad Faisal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --drac-bg: #282a36;
+            --drac-fg: #f8f8f2;
+            --drac-cyan: #8be9fd;
+            --drac-green: #50fa7b;
+            --drac-comment: #6272a4;
+            --drac-orange: #ffb86c;
+        }
+
+        body {
+            background-color: var(--drac-bg);
+            color: var(--drac-fg);
+            font-family: 'Fira Code', monospace;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        .header { margin-bottom: 30px; border-bottom: 1px solid var(--drac-comment); padding-bottom: 20px;}
+        .back-link { color: var(--drac-cyan); text-decoration: none; float: left; }
+
+        /* PROGRESS SECTION */
+        .progress-section { margin-bottom: 30px; }
+        .progress-bar-bg { background: var(--drac-comment); height: 12px; border-radius: 6px; overflow: hidden; }
+        .progress-fill { 
+            background: var(--drac-green); 
+            height: 100%; 
+            width: 0%; 
+            transition: width 0.8s ease-in-out; 
+        }
+
+        /* SEARCH BOX */
+        .search-container { margin-bottom: 30px; }
+        #day-search {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 4px;
+            border: 1px solid var(--drac-comment);
+            background: #343746;
+            color: var(--drac-fg);
+            font-family: 'Fira Code', monospace;
+            outline: none;
+            box-sizing: border-box;
+        }
+        #day-search:focus { border-color: var(--drac-cyan); }
+
+        /* THE GRID */
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* DYNAMIC CARD STYLING */
+        .day-card {
+            background: #343746;
+            border: 1px solid var(--drac-comment);
+            border-radius: 4px;
+            padding: 20px 10px;
+            text-decoration: none;
+            color: var(--drac-fg);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .day-card:hover:not(.locked) {
+            border-color: var(--drac-green);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(80, 250, 123, 0.2);
+        }
+
+        .completed { border-left: 4px solid var(--drac-green); opacity: 1; }
+        .completed .day-num { color: var(--drac-green); }
+
+        .locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .day-num { font-size: 1.5em; font-weight: bold; margin-bottom: 5px; }
+        .day-label { font-size: 0.7em; color: var(--drac-cyan); text-transform: uppercase; text-align: center; line-height: 1.2;}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="/myblogs/" class="back-link">$ cd ..</a>
+            <h1 style="color: var(--drac-orange);">30_DAYS_OF_TERRAFORM.exe</h1>
+            <p style="color: var(--drac-comment);">Tracking progress from Init to Destroy</p>
+        </div>
+
+        <div class="progress-section">
+            <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 10px;">
+                <span>Progress: <span id="progress-percent">0</span>%</span>
+                <span id="progress-stat">0/30 Days</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="day-search" placeholder="Search topics (e.g. Variables, Providers)...">
+        </div>
+
+        <div id="challenge-grid" class="challenge-grid">
+            </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let allDays = []; // Memory storage for search filtering
+
+            // Fetch the external JSON file
+            fetch('/data.json')
+                .then(response => {
+                    if (!response.ok) throw new Error("Check if data.json exists in root");
+                    return response.json();
+                })
+                .then(data => {
+                    allDays = data.terraform_challenge;
+                    renderCards(allDays);
+                    updateProgress(allDays);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('challenge-grid').innerHTML = 
+                        `<p style="color:#ff5555">Error: Could not load data.json. Ensure it's in the root folder.</p>`;
+                });
+
+            // Search Input Event Listener
+            document.getElementById('day-search').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredDays = allDays.filter(item => 
+                    item.title.toLowerCase().includes(searchTerm) || 
+                    item.day.includes(searchTerm)
+                );
+                renderCards(filteredDays);
+            });
+
+            function renderCards(daysToRender) {
+                const grid = document.getElementById('challenge-grid');
+                grid.innerHTML = daysToRender.map(item => {
+                    const isLocked = item.status === 'locked';
+                    // Link uses the tf-dayXX format from your JSON
+                    const url = isLocked ? "javascript:void(0)" : `/view.html?post=terraform-30/tf-day${item.day}&type=posts`;
+                    
+                    return `
+                        <a href="${url}" class="day-card ${item.status}">
+                            <span class="day-num">${item.day}</span>
+                            <span class="day-label">${isLocked ? 'LOCKED' : item.title}</span>
+                        </a>
+                    `;
+                }).join('');
+            }
+
+            function updateProgress(challengeData) {
+                const totalDays = challengeData.length;
+                const completedDays = challengeData.filter(day => day.status === 'completed').length;
+                const percentage = Math.round((completedDays / totalDays) * 100);
+
+                // Update UI elements
+                document.getElementById('progress-fill').style.width = percentage + "%";
+                document.getElementById('progress-percent').innerText = percentage;
+                document.getElementById('progress-stat').innerText = `${completedDays}/${totalDays} Days`;
+
+                // Theme color change at 100%
+                if (percentage === 100) {
+                    document.getElementById('progress-fill').style.background = "var(--drac-cyan)";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
